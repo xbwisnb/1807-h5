@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			<style type="text/css">
+		tr{font-size: 20px;}
+			img{width: 100%;}
+			em{display: block;width: 120px;line-height: 30px;color: #fff;background: dodgerblue;margin: 10px auto;text-align: center;border-radius: 6px;}
+		</style>
+		</style>
+		<link rel="stylesheet" type="text/css" href="css/public.css"/>
+		<link rel="stylesheet" type="text/css" href="css/shop.css"/>
+		
+	</head>
+	<body>
+		
+		<header>
+			<div class="quan">
+				<div class="left">
+					<ul>
+						<li><a href="index.html">醉品茶城首页</a></li> 
+						<li><a href="#">OMO体验店加盟</a></li>
+						<li><a href="#">醉品茶城手机版</a></li>
+					</ul>
+				</div>
+				<div class="last">
+					<a href="shop.html">购物车</a>			
+				</div>
+			</div>
+			<div class="right">
+				<ul>
+					<li class="te"><a href="#">4006-066-068</a></li>
+					<li><a href="#">关于醉品</a></li>
+					<li><a href="#">帮助中心</a></li>
+					<li><a href="#">我的订单</a></li>
+					<li><a href="zhuce.html">注册</a></li>
+					<li><a href="login.html">登录</a></li>
+					
+				</ul>
+			</div> 
+			</div>
+		</header>
+		
+		<div class="hf">
+			
+		</div>
+		
+		<div class="nav">
+			<div class="quan">
+				<div class="logo">
+					<a href="#"><img src="img/zp_logo_u2.png"/></a>
+				</div>
+				<div class="cent"> 
+					<form action="/list" id="list">
+             		   <input type="text" name="keyword" value="" class="search-text">
+            		</form>            
+					<span class="search-btn" id="sub"></span>
+				</div>
+				<div class="clearfix" id="key-word">
+   						<a href="list.html" target="_blank" class="first_hot">白茶</a>
+     					<a href="list.html" target="_blank">广东单枞</a>
+     					<a href="list.html" target="_blank">龙井</a>     
+     					<a href="list.html" target="_blank">金骏眉</a>
+     					<a href="list.html" target="_blank">普洱</a>
+     			</div>
+     			<div id="ha">
+     				<img src="img/111.png"/>
+     			</div>
+			</div>
+		</div>
+		
+		
+		
+		
+		<h2><small><a href="list.html">去商品列表</a></small></h2>
+		<table border="1" cellspacing="0" width="700" align="center">
+			<thead>
+				<tr>
+					<th>图片</th>
+					<th>介绍</th>
+					<th>价格</th>
+					<th>数量</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				
+			</tbody>
+		</table>
+		
+		
+		
+		
+		
+	</body>
+</html>
+<script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>
+
+	<script type="text/javascript">
+		class Car{
+			constructor(options){
+				this.url = options.url;
+				this.body = options.body;
+				
+				this.load();
+			}
+			load(){
+				var that = this;
+				$.ajax({
+					url:this.url,
+					success:function(res){
+						that.res = res;
+						that.getcookie();
+					}
+				})
+			}
+			getcookie(){
+				this.goods = JSON.parse($.cookie("goods"))
+		
+				this.display();
+			}
+			display(){
+				var str = ""
+				for(var i=0;i<this.res.length;i++){
+					for(var j=0;j<this.goods.length;j++){
+					
+						if(this.res[i].goodsId === this.goods[j].id){
+							
+						
+							str += `<tr>
+										<td><img src="${this.res[i].url}"/></td>
+										<td>${this.res[i].name}</td>
+										<td>${this.res[i].price}</td>
+										<td><input type="number" value="${this.goods[j].num}"></td>
+										<td index="${this.res[i].goodsId}"><em>删除</em></td>
+									</tr>`
+						}
+					}
+					}
+				
+			
+				this.body.html(str)
+				
+				this.changeNum()
+				this.remove()
+			}
+			
+			changeNum(){
+				var that = this;
+
+				this.body.on("input","input",function(){
+
+					that.changeId = $(this).parent().next("td").attr("index");
+					that.num = $(this).val();
+
+					that.changeCookie()
+				})
+			}
+			remove(){
+				var that = this;
+
+				this.body.on("click","em",function(){
+
+					that.removeId = $(this).parent().attr("index");
+					$(this).parent().parent().remove()
+
+					that.removeCookie()
+				})
+			}
+			changeCookie(){
+
+				for(var i=0;i<this.goods.length;i++){
+					if(this.goods[i].id === this.changeId){
+
+						this.goods[i].num = this.num;
+					}
+				}
+
+				$.cookie("goods",JSON.stringify(this.goods))
+			}
+			removeCookie(){
+
+				for(var i=0;i<this.goods.length;i++){
+					if(this.goods[i].id === this.removeId){
+
+						this.goods.splice(i,1)
+					}
+				}
+
+				$.cookie("goods",JSON.stringify(this.goods))
+			}
+		
+	}
+		
+		new Car({
+			url:"http://localhost/xubowen/cha/json/list.json",
+			body:$("tbody")
+		})
+			
+			
+			
+			
+		
+		
+		
+	</script>
+
+
+

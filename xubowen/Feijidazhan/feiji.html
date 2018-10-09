@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			#score{color: #fff;}
+		</style>
+		<link rel="stylesheet" type="text/css" href="dahuiji.css"/>
+	</head>
+	<body>
+		<div id="body_main" class="main">
+			<span id="score" >得分：0</span>
+		
+      	
+	
+			<ul id="options" class="options">
+				<li value="1">超级困难</li>
+				<li value="2">非常困难</li>
+				<li value="3">比较困难</li>
+				<li value="4">就选我吧</li>
+			</ul>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	
+	function Engine(){
+
+	
+	
+		this.li=document.getElementById("options").children
+		this.hard=1;
+		this.main=document.getElementById("body_main")
+		this.init()
+	}
+	Engine.prototype.init=function(){
+		var that=this;
+		for (var i=0;i<this.li.length;i++){
+			this.li[i].addEventListener("click",function(){
+				that.hard=this.value;
+				console.log(that.hard)
+				this.parentNode.remove();
+				that.load();
+			})
+		}
+	}
+	Engine.prototype.load = function(){
+		this.logo=createDiv("logo");
+		this.loading=createDiv("loading");
+		var i=1;
+		this.loading.timer=setInterval(()=>{
+			this.loading.style.backgroundImage="url(images/loading"+((i++)%3+1)+".png)";
+		},500)
+		
+		var k=0;
+		setInterval(()=>{
+			this.main.style.backgroundPositionY = (k+=4) +"px"
+		},30)
+		setTimeout(()=>{
+			this.logo.remove()
+			this.loading.remove()
+			clearInterval(this.loading.timer);
+			this.gameStart()
+		},2100)
+	}
+	Engine.prototype.gameStart=function(){ 
+		plane.init(this.main)
+		plane.fire(this.hard)
+		setInterval(()=>{
+			if(Math.random()<0.8) new Enemy(this.main,1);
+		},1000)
+		setInterval(()=>{
+			if(Math.random()<0.5) new Enemy(this.main,2);
+		},3000)
+		setInterval(()=>{
+			if(Math.random()<0.3) new Enemy(this.main,3);
+		},5000) 
+	}
+
+	var plane ={
+		fen:0,
+//		
+		init:function(main){
+			this.main=main;
+			this.ele=createDiv("my-warplain");
+			this.ele.style.left=(this.main.offsetWidth-this.ele.offsetWidth)/2+"px";
+			this.ele.style.bottom=0;
+			this.move()
+		},
+		move:function(){
+			var that=this;
+			document.addEventListener("mousemove",function(eve){
+			var e=eve||window.event;
+			var l=e.clientX-that.main.offsetLeft-that.ele.offsetWidth/2
+			var t=e.clientY-that.ele.offsetHeight/2;
+			if(l<0) l=0;
+			if(t<0) t=0;	
+			if(l>that.main.offsetWidth-that.ele.offsetWidth){
+				l=that.main.offsetWidth-that.ele.offsetWidth
+			}
+			that.ele.style.left=l+"px";
+			that.ele.style.top=t+"px"
+			})
+		},
+		fire:function(type){
+			var t = 500;
+			switch(type){
+				case 1:t = 500;break;
+				case 2:t = 350;break;
+				case 3:t = 200;break;
+				case 4:t = 80;break;
+			}
+			setInterval(()=>{
+				this.aBullet.push(new Bullet())
+			},t)
+		},
+		aBullet:[]
+	}
+	function Bullet(){
+		this.init()
+	}
+	
+	Bullet.prototype={
+		constructor:Bullet,
+		init:function(){
+			this.ele=createDiv("bullet");
+			this.ele.style.left = plane.ele.offsetLeft + plane.ele.offsetWidth/2 - this.ele.offsetWidth/2 + "px";
+				this.ele.style.top = plane.ele.offsetTop - this.ele.offsetHeight + "px";
+				
+				this.move()
+		}, 
+		move:function(){
+			var speed = 4;
+			this.ele.timer = setInterval(()=>{
+				if(this.ele.offsetTop < 0){
+					this.die()
+				}else{
+					this.ele.style.top=this.ele.offsetTop-speed+"px"
+				} 
+			},30) 
+		},
+		die:function(){
+			clearInterval(this.ele.timer)
+			this.ele.className="bullet_die";
+			setTimeout(()=>{
+					this.ele.style.backgroundImage = "url(images/die2.png)"
+				},100)
+			setTimeout(()=>{
+				this.ele.remove(); 
+				for(var i=0;i<plane.aBullet.length;i++){
+					if(plane.aBullet[i].ele==this.ele){
+						plane.aBullet.splice(i,1)
+					}
+				}
+			},200)
+		} 
+	}
+	class Enemy{
+		
+	
+		
+		constructor(main,type){
+			this.main=main;
+			this.type=type
+			this.init()
+		}
+		init(){
+			
+			switch(this.type){
+				case 1:
+				this.name = "enemy-small";
+				this.speed = 3;
+				this.hp = 15;
+			
+		
+			
+				this.dieNum=3;
+				break;
+				case 2:
+				this.name = "enemy-middle";
+				this.speed = 2;
+				this.hp = 35;
+				this.dieNum=4;
+			
+				break;
+					case 3:
+				this.name = "enemy-large";
+				this.speed = 1;
+				this.hp =60;
+				this.dieNum=6;
+				
+				break;
+			}
+			this.ele=createDiv(this.name);
+			this.ele.style.top=-this.ele.offsetHeight+10+"px";
+			this.ele.style.left=random(0,this.main.offsetWidth-this.ele.offsetWidth)+"px"
+			this.move()
+		}
+			move(){
+				this.ele.timer = setInterval(()=>{
+					if(this.ele.offsetTop > this.main.offsetHeight + 100){
+						this.die()
+					}else{
+						this.ele.style.top = this.ele.offsetTop + this.speed + "px";
+						for(var i=0;i<plane.aBullet.length;i++){
+							if(plane.aBullet[i].ele.offsetLeft + plane.aBullet[i].ele.offsetWidth > this.ele.offsetLeft){
+								if(plane.aBullet[i].ele.offsetLeft < this.ele.offsetLeft + this.ele.offsetWidth){
+									if(plane.aBullet[i].ele.offsetTop < this.ele.offsetTop + this.ele.offsetHeight){
+										if(plane.aBullet[i].ele.offsetTop + plane.aBullet[i].ele.offsetHeight > this.ele.offsetTop){
+											
+											plane.aBullet[i].die();
+											this.hp--;
+//											console.log(this.hp)
+											if(this.hp == 0){
+												this.die()
+												
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},30)
+			}
+	
+	die(){
+				this.scroe=document.getElementById("score")
+		this.scroe.innerHTML="得分："+plane.fen;
+		if(this.type==1){
+			plane.fen+=10
+		}
+		if(this.type==2){
+			plane.fen+=20
+		}
+		if(this.type==3){
+			plane.fen+=30
+		}
+		console.log(plane.fen)
+		clearInterval(this.ele.timer);
+		var i=1;
+		this.ele.dieTime=setInterval(()=>{
+			if(i==this.dieNum+1){
+				this.ele.remove();
+				clearInterval(this.ele.dieTime);
+			}else{
+				this.ele.style.backgroundImage="url(images/plane"+this.type+"_die"+(i++)+".png)";
+			}
+		},80)
+	}
+	}
+	
+	function random(a,b){
+		return  Math.round(Math.random()*(a-b)+b)
+	} 
+	function createDiv(myclass){
+		var div=document.createElement("div")
+		div.className=myclass;
+		document.getElementById("body_main").appendChild(div)
+		return div;
+	}
+		
+	new Engine()
+	
+	
+	
+</script>

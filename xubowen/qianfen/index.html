@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="libs/bootstrap.css"/>
+		<style type="text/css">
+			.h-80{height: 80px;}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div class="row h-80 align-items-center">
+				<div class="col-2">LOGO</div>
+				<div class="col-2">易错题收集</div>
+				<div class="col-1"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo" id="insert">添加错题</button></div>
+			</div>
+			<div class="row">
+				<table class="table col-12 table-bordered">
+					<thead>
+						<th>序号</th>
+						<th>易错内容</th>
+						<th>错在哪</th>
+						<th>你的想法</th>
+						<th>操作1</th>
+						<th>操作2</th>
+					</thead>
+					<tbody>
+						<!--<tr>
+							<td>Data</td>
+							<td>Data</td>
+							<td>Data</td>
+							<td>Data</td>
+							<td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">修改</button></td>
+							<td><span class="btn btn-secondary">删除</span></td>
+						</tr>-->
+					</tbody>
+				</table>
+			</div>
+			<nav aria-label="Page navigation example">
+			  <ul class="pagination justify-content-center">
+			    <li class="page-item disabled"><a class="page-link" href="#">上一页</a></li>
+			    <li class="page-item"><a class="page-link" href="#">1</a></li>
+			    <li class="page-item"><a class="page-link" href="#">2</a></li>
+			    <li class="page-item"><a class="page-link" href="#">3</a></li>
+			    <li class="page-item"><a class="page-link" href="#">下一页</a></li>
+			  </ul>
+			</nav>
+		</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">请输入指定的信息</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">易错内容</label>
+            <input type="text" class="form-control" id="cont">
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">错在哪</label>
+            <textarea class="form-control" id="which"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">你的想法</label>
+            <textarea class="form-control" id="idea"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id="send">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+	<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    
+    <script src="ajax.js" type="text/javascript" charset="utf-8"></script>
+    <script src="index.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+</html>
